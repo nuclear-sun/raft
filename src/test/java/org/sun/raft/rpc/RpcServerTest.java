@@ -7,10 +7,10 @@ import static org.testng.Assert.*;
 
 public class RpcServerTest {
 
-/*    @Test
+    @Test
     public void testServer() {
         RpcServer server = new RpcServer();
-        RaftService.Processor processor = RaftService.Processor(new CalculateImpl());
+        Calculate.Processor processor = new Calculate.Processor(new CalculateImpl());
         server.setProcessor(processor);
         new Thread("Thread-rpc_server") {
             @Override
@@ -35,6 +35,8 @@ public class RpcServerTest {
             result = client.calculate();
         } catch (Exception e){
             e.printStackTrace();
+        } finally {
+            server.stop();
         }
         assertEquals(result, 20);
     }
@@ -44,6 +46,6 @@ public class RpcServerTest {
         public int calculate() throws TException {
             return 20;
         }
-    }*/
+    }
 
 }

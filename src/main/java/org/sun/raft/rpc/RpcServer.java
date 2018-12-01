@@ -12,6 +12,7 @@ public class RpcServer {
     private static final int DEFAULT_PORT = 5055;
     private int port;
     private TProcessor processor;
+    private TServer server;
 
     public RpcServer(int port) {
         this.port = port;
@@ -28,7 +29,13 @@ public class RpcServer {
     public void serve() throws TException {
         TServerTransport transport = new TServerSocket(this.port);
         Args args = (Args)(new Args(transport)).processor(this.processor);
-        TServer server = new TThreadPoolServer(args);
+        server = new TThreadPoolServer(args);
         server.serve();
+    }
+
+    public void stop() {
+        if(server != null) {
+            server.stop();
+        }
     }
 }

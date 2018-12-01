@@ -15,19 +15,24 @@ import org.slf4j.LoggerFactory;
 
 public class Writer implements Closeable {
     private static final Logger logger = LoggerFactory.getLogger(Writer.class);
-    private String directory = "state/";
+    private String directory = "";
     private Map<String, ObjectOutputStream> cache = new HashMap();
 
     public Writer() {
     }
 
+    /**
+     * 注意：如果文件被重新打开，文件内容会被覆写，否则是追加
+     * @param fileName
+     * @param object
+     * @throws IOException
+     */
     public void writeObject(String fileName, Object object) throws IOException {
         ObjectOutputStream objectOutputStream = (ObjectOutputStream)this.cache.get(fileName);
         if (objectOutputStream == null) {
             objectOutputStream = new ObjectOutputStream(new FileOutputStream(this.directory + fileName));
             this.cache.put(fileName, objectOutputStream);
         }
-
         objectOutputStream.writeObject(object);
     }
 

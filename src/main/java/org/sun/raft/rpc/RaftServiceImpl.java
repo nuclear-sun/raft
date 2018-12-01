@@ -3,13 +3,30 @@ package org.sun.raft.rpc;
 import java.util.List;
 import org.apache.thrift.TException;
 import org.sun.raft.rpc.RaftService.Iface;
+import org.sun.raft.state.StateMachine;
 
 public class RaftServiceImpl implements Iface {
-    public RaftServiceImpl() {
+
+    private final StateMachine stateMachine;
+
+    public RaftServiceImpl(StateMachine stateMachine) {
+        this.stateMachine = stateMachine;
     }
 
     public RVResult requestVote(long term, int candidateId, long lastLogIndex, long lastLogTerm) throws TException {
-        return null;
+        synchronized (stateMachine) {
+            RVResult result = new RVResult();
+            if (term < stateMachine.getCurrentTerm()) {
+                result.term = stateMachine.getCurrentTerm();
+                result.voteGranted = false;
+                return result;
+            }
+            if(stateMachine.getVotedFor()<0 || stateMachine.getVotedFor()==candidateId){
+
+            }
+
+            return null;
+        }
     }
 
     public APResult appendEntries(long term, int leaderId, long prevLogIndex, long prevLogTerm, List<String> entries, long leaderCommit) throws TException {
