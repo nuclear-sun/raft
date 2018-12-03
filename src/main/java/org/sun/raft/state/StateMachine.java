@@ -16,7 +16,7 @@ public class StateMachine {
 
     private long currentTerm = 0;
     private int votedFor = -1;
-    private Queue<LogEntry> logList = new LinkedList<>();
+    private Log log = new LinkedLog();
     private long commitIndex;
     private long lastApplied;
     private long[] nextIndex;
@@ -72,24 +72,15 @@ public class StateMachine {
     }
 
     public boolean appendLog(final LogEntry logEntry) {
-        String fileName = "logList";
-        try {
-            writer.writeObject(fileName, logEntry);
-        } catch (IOException e) {
-            logger.error("Persist votedFor failed_" + e.getMessage(), e);
-            return false;
-        }
-        logList.add(logEntry);
-        return true;
+        return log.appendLogEntry(logEntry);
     }
 
     public LogEntry getLastLog() {
-        LogEntry entry = logList.peek();
-        return entry;
+        return log.getLastLogEntry();
     }
 
-/*    public boolean hasLogEntry(long index, long term) {
-
-    }*/
+    public long getLogSize() {
+        return log.getLogSize();
+    }
 
 }

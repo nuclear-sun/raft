@@ -23,7 +23,7 @@ public class RaftServiceImpl implements Iface {
             }
             // TODO Warning: stateMachine.getVotedFor()==candidateId
             if(stateMachine.getVotedFor()<0 || stateMachine.getVotedFor()==candidateId){
-                if(!moreUpdated(stateMachine.getCurrentTerm(), stateMachine.getLastLog().getIndex(),
+                if(!moreUpdated(stateMachine.getCurrentTerm(), stateMachine.getLogSize() - 1,
                         lastLogTerm, lastLogIndex)){
                     result.term = term;
                     result.voteGranted = true;
@@ -49,7 +49,8 @@ public class RaftServiceImpl implements Iface {
         return false;
     }
 
-    public APResult appendEntries(long term, int leaderId, long prevLogIndex, long prevLogTerm, List<String> entries, long leaderCommit) throws TException {
+    public APResult appendEntries(long term, int leaderId, long prevLogIndex, long prevLogTerm,
+                                  List<String> entries, long leaderCommit) throws TException {
         synchronized (stateMachine) {
             APResult result = new APResult();
             if(term < stateMachine.getCurrentTerm()) {
@@ -57,6 +58,7 @@ public class RaftServiceImpl implements Iface {
                 result.success = false;
                 return result;
             }
+
 
         }
         return null;
