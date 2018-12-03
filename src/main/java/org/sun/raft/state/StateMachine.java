@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.sun.raft.io.Writer;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
 
 public class StateMachine {
 
@@ -13,7 +16,7 @@ public class StateMachine {
 
     private long currentTerm = 0;
     private int votedFor = -1;
-    private List<LogEntry> logList;
+    private Queue<LogEntry> logList = new LinkedList<>();
     private long commitIndex;
     private long lastApplied;
     private long[] nextIndex;
@@ -79,4 +82,13 @@ public class StateMachine {
         logList.add(logEntry);
         return true;
     }
+
+    public LogEntry getLastLog() {
+        LogEntry entry = logList.peek();
+        Objects.
+        return logList.get(logList.size()-1);
+    }
+
+    public boolean hasLogEntry(long index, )
+
 }

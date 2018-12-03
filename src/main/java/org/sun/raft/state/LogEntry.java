@@ -2,7 +2,7 @@ package org.sun.raft.state;
 
 import java.io.Serializable;
 
-public class LogEntry implements Serializable{
+public class LogEntry implements Serializable,Cloneable{
     private long index;
     private long term;
     private String command;
