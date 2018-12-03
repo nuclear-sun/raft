@@ -85,10 +85,11 @@ public class StateMachine {
 
     public LogEntry getLastLog() {
         LogEntry entry = logList.peek();
-        Objects.
-        return logList.get(logList.size()-1);
+        return entry;
     }
 
-    public boolean hasLogEntry(long index, )
+/*    public boolean hasLogEntry(long index, long term) {
+
+    }*/
 
 }

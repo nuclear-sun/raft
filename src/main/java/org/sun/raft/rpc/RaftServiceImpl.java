@@ -62,9 +62,9 @@ public class RaftServiceImpl implements Iface {
         return null;
     }
 
-    private boolean matchLog(long term, long index) {
+/*    private boolean matchLog(long term, long index) {
         if(
-    }
+    }*/
 
 
 }
