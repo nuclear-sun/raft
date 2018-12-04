@@ -14,6 +14,7 @@ public class StateMachine {
 
     private static final Logger logger = LoggerFactory.getLogger(StateMachine.class);
 
+    private Role role = Role.FOLLOWER;
     private long currentTerm = 0;
     private int votedFor = -1;
     private Log log = new LinkedLog();
@@ -23,6 +24,10 @@ public class StateMachine {
     private long[] matchIndex;
 
     private final Writer writer = new Writer();
+
+    public Role getRole() {
+        return this.role;
+    }
 
     public boolean setCurrentTerm(long currentTerm) {
         if (currentTerm <= this.currentTerm) {
@@ -81,6 +86,13 @@ public class StateMachine {
 
     public long getLogSize() {
         return log.getLogSize();
+    }
+
+    public enum Role {
+        FOLLOWER, CANDIDATE, LEADER;
+        public Role valueOf(int value) {
+            return Role.values()[value];
+        }
     }
 
 }
