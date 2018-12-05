@@ -17,7 +17,7 @@ public class StateMachine {
     private Role role = Role.FOLLOWER;
     private long currentTerm = 0;
     private int votedFor = -1;
-    private Log log = new LinkedLog();
+    private final Log log = new LinkedLog();
     private long commitIndex;
     private long lastApplied;
     private long[] nextIndex;
@@ -76,16 +76,16 @@ public class StateMachine {
         return votedFor;
     }
 
-    public boolean appendLog(final LogEntry logEntry) {
-        return log.appendLogEntry(logEntry);
+    public Log getLog() {
+        return this.log;
     }
 
-    public LogEntry getLastLog() {
-        return log.getLastLogEntry();
+    public long getCommitIndex() {
+        return this.commitIndex;
     }
 
-    public long getLogSize() {
-        return log.getLogSize();
+    public void setCommitIndex(long commitIndex) {
+        this.commitIndex = commitIndex;
     }
 
     public enum Role {

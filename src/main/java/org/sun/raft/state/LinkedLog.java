@@ -17,16 +17,20 @@ public class LinkedLog implements Log {
 
     private static final Logger logger = LoggerFactory.getLogger(LinkedLog.class);
 
-    private final List<LogEntry> logList = new LinkedList<>();
+    private final LinkedList<LogEntry> logList = new LinkedList<>();
     private long baseIndex = 0;
 
     private final Writer writer = new Writer();
     private static final String persistFile = "logList";
 
+    private int realIndex(long index) {
+        return (int)(index - baseIndex);
+    }
+
     // TODO writer insert not implemented
     @Override
     public boolean insertLogEntry(long index, LogEntry logEntry) {
-        int realIndex = (int)(index - baseIndex);
+        int realIndex = realIndex(index);
         if(realIndex < 0 || realIndex > logList.size()) {
             return false;
         }
@@ -66,5 +70,14 @@ public class LinkedLog implements Log {
         }
         LogEntry logEntry = logList.get(realIndex);
         return logEntry;
+    }
+
+    @Override
+    // TODO persistent
+    public void removeLogEntryAfter(long index) {
+        int beginIndex = realIndex(index);
+        while (beginIndex < logList.size() - 1) {
+            logList.removeLast();
+        }
     }
 }

@@ -7,5 +7,5 @@ public interface Log {
     LogEntry getLogEntry(long index);
     boolean insertLogEntry(long index, LogEntry entry);
     boolean appendLogEntry(LogEntry entry);
-
+    void removeLogEntryAfter(long index);
 }
