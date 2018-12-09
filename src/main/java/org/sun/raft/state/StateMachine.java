@@ -9,13 +9,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class StateMachine {
 
     private static final Logger logger = LoggerFactory.getLogger(StateMachine.class);
 
-    private Role role = Role.FOLLOWER;
+    private volatile Role role = Role.FOLLOWER;
     private long currentTerm = 0;
+    //private AtomicLong currentTerm = new AtomicLong(0);
     private int votedFor = -1;
     private final Log log = new LinkedLog();
     private long commitIndex;
@@ -29,29 +31,43 @@ public class StateMachine {
         return this.role;
     }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public boolean setCurrentTerm(long currentTerm) {
-        if (currentTerm <= this.currentTerm) {
+        synchronized (this) {
+            if (currentTerm <= this.currentTerm) {
+                return true;
+            }
+            String fileName = "currentTerm";
+            try {
+                writer.writeObject(fileName, Long.valueOf(currentTerm));
+            } catch (IOException e) {
+                logger.error("Persist currentTerm failed_" + e.getMessage(), e);
+                return false;
+            } finally {
+                try {
+                    writer.close(fileName);
+                } catch (IOException e) {
+                    logger.error("Close file currentTerm failed_" + e.getMessage(), e);
+                }
+            }
+            this.currentTerm = currentTerm;
             return true;
         }
-        String fileName = "currentTerm";
-        try {
-            writer.writeObject(fileName, Long.valueOf(currentTerm));
-        } catch (IOException e) {
-            logger.error("Persist currentTerm failed_" + e.getMessage(), e);
-            return false;
-        } finally {
-            try {
-                writer.close(fileName);
-            } catch (IOException e) {
-                logger.error("Close file currentTerm failed_" + e.getMessage(), e);
-            }
-        }
-        this.currentTerm = currentTerm;
-        return true;
     }
 
     public long getCurrentTerm() {
-        return this.currentTerm;
+        synchronized (this) {
+            return this.currentTerm;
+        }
+    }
+
+    public void increCurrentTerm() {
+        synchronized (this) {
+            this.currentTerm ++;
+        }
     }
 
     public boolean setVoteFor(int votedFor){
