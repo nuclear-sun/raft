@@ -5,16 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.sun.raft.io.Writer;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Queue;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class StateMachine {
 
     private static final Logger logger = LoggerFactory.getLogger(StateMachine.class);
 
+    private int id = -1;
     private volatile Role role = Role.FOLLOWER;
     private long currentTerm = 0;
     //private AtomicLong currentTerm = new AtomicLong(0);
@@ -26,6 +22,16 @@ public class StateMachine {
     private long[] matchIndex;
 
     private final Writer writer = new Writer();
+
+    public void setId(int id) {
+        if(this.id < 0 && id >= 0) {
+            this.id = id;
+        }
+    }
+
+    public int getId() {
+        return this.id;
+    }
 
     public Role getRole() {
         return this.role;
@@ -64,9 +70,9 @@ public class StateMachine {
         }
     }
 
-    public void increCurrentTerm() {
+    public long increCurrentTerm() {
         synchronized (this) {
-            this.currentTerm ++;
+            return ++this.currentTerm;
         }
     }
 

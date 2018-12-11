@@ -36,6 +36,10 @@ public class Launcher {
 
         //1. 实例化状态
         StateMachine stateMachine = new StateMachine();
+        int thisid = Integer.parseInt(properties.getProperty("this.id", "-1"));
+        stateMachine.setId(thisid);
+
+
 
         //2. 内部 RPC 服务
         RaftServiceImpl raftServiceImpl = new RaftServiceImpl(stateMachine);
